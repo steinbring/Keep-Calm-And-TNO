@@ -1,0 +1,86 @@
+<!-- 
+This is meant to be a demo of a complete end-to-end encryption solution.  It leverages OpenPGP.js and Firebase. There should be no need for any additional frameworks, libraries, or additives.
+
+Joe Steinbring
+http://steinbring.net
+http://twitter.com/steinbring
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OpenPGP.js Demo #1</title>
+</head>
+<body>
+<form name="theForm">
+<fieldset>
+  	<legend>Generate a new public / private key pair</legend>
+	<label>User ID
+		<input type="text" name="UserID" id="UserID" size="20">
+	</label>
+	<label>Passphrase
+		<input type="text" name="Passphrase" id="Passphrase" size="20">
+	</label>
+	<button type="button" onclick="generateKeys(document.getElementById('UserID').value,document.getElementById('Passphrase').value)">Generate Keys</button>
+	<button type="button" onclick="loadKeys()">Load Keys</button>
+</fieldset>
+<fieldset>
+	<legend>Keys to use for encryption</legend>
+	<div>
+	<label>Public Key
+	<textarea name="PublicKey" id="PublicKey"></textarea>
+	</label>
+	</div>
+	<div>
+	<label>Private Key
+	<textarea name="PrivateKey" id="PrivateKey"></textarea>
+	</label>
+	</div>
+</fieldset>
+<fieldset>
+	<legend>Save the public key to the Firebase DB</legend>
+	<label>Note
+		<input type="text" name="note" id="note" size="20">
+	</label>
+	<button type="button" onclick="savePublicKeyToFB(document.getElementById('note').value,document.getElementById('PublicKey').value);">Save to Firebase</button>
+</fieldset>
+<fieldset>
+	<legend>What public keys exist within the Firebase DB?</legend>
+	<select name="publickeys" id="publicKeys">
+		
+	</select>
+	<button type="button" onclick="getPublicKeysFromFB();">Fetch Public Keys</button>
+	<button type="button" onclick="setAsRecipient(document.getElementById('publicKeys').value);">Set this as the recipient of the message</button>
+</fieldset>
+<fieldset>
+	<legend>The Recipient</legend>
+	<textarea id="recipient"></textarea>
+</fieldset>
+<fieldset>
+	<legend>Plaintext Message</legend>
+	<textarea id="PTMessage"></textarea>
+	<button 	type="button" 
+				onclick="encryptMessage(document.getElementById('PTMessage').value, document.getElementById('recipient').value);"
+				>Encrypt Message</button>
+</fieldset>
+<fieldset>
+	<legend>What messages exist within the Firebase DB?</legend>
+	<select name="messages" id="messages">
+		
+	</select>
+	<button type="button" onclick="getMessagesFromFB();">Fetch Messages</button>
+	<button type="button" onclick="setEncryptedMessage(document.getElementById('messages').value);">Set For Decryption</button>
+</fieldset>
+<fieldset>
+	<legend>Encrypted Message</legend>
+	<textarea id="EncryptedMessage"></textarea>
+	<button type="button" onclick="decryptMessage(document.getElementById('EncryptedMessage').value,document.getElementById('PrivateKey').value,document.getElementById('Passphrase').value);">Decrypt Message</button>
+	<button type="button" onclick="saveMessageToFB(document.getElementById('EncryptedMessage').value);">Save to Firebase</button>
+</fieldset>
+<!-- Load OpenPGP -->
+<script type="text/javascript" src="openpgp.min.js"></script>
+<!-- Load firebase -->
+<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+<!-- Load the javascript for this demo -->
+<script src="demo1.js"></script>
+</body>
+</html>
